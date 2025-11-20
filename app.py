@@ -1221,20 +1221,6 @@ st.markdown('<div class="export-section">', unsafe_allow_html=True)
 st.subheader("📤 Exportar Datos de Análisis")
 
 if st.session_state.analysis_history:
-    
-    if st.button("🚀 Subir Excel a Drive"):
-        excel_data = export_to_excel()
-        folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
-        link = upload_to_drive(
-            excel_data.getvalue(),
-            folder_id,
-            f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        st.success(f"✅ Archivo guardado en Drive: {link}")
-    else:
-        st.info("📭 No hay datos para subir. Generá al menos un análisis.")
-
     col_export1, col_export2, col_export3 = st.columns(3)
     
     with col_export1:
@@ -1263,7 +1249,7 @@ if st.session_state.analysis_history:
         """)
         
         df_analysis, df_summary = generate_export_data()
-        csv_data = df_analysis.to_csv(index=False).encode('utf-8')
+        csv_data = df_analysis.to_csv(index=False).encode("utf-8")
         
         st.download_button(
             label="📥 Descargar CSV (.csv)",
@@ -1272,9 +1258,11 @@ if st.session_state.analysis_history:
             mime="text/csv",
             use_container_width=True
         )
-            
+    
+    with col_export3:
+        st.markdown("### ☁️ Subir a Google Drive")
         if st.button("🚀 Subir Excel a Drive"):
-            excel_data = export_to_excel()
+            excel_data = export_to_excel()  # o export_to_csv(), según tu función
             folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
             link = upload_to_drive(
                 excel_data.getvalue(),
@@ -1283,8 +1271,8 @@ if st.session_state.analysis_history:
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
             st.success(f"✅ Archivo guardado en Drive: {link}")
-        else:
-            st.info("📭 No hay datos para subir. Generá al menos un análisis.")
+else:
+    st.info("📭 No hay datos para exportar. Generá al menos un análisis.")
 
     
     with col_export3:
