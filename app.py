@@ -12,6 +12,13 @@ import pandas as pd
 import csv
 from io import BytesIO
 
+
+# Inicializar historial de análisis si no existe
+if "analysis_history" not in st.session_state:
+    st.session_state.analysis_history = []
+
+
+
 # =============================================
 # CONFIGURACIÓN DE LA PÁGINA
 # =============================================
@@ -1207,6 +1214,20 @@ st.markdown('<div class="export-section">', unsafe_allow_html=True)
 st.subheader("📤 Exportar Datos de Análisis")
 
 if st.session_state.analysis_history:
+    
+    if st.button("🚀 Subir Excel a Drive"):
+        excel_data = export_to_excel()
+        folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
+        link = upload_to_drive(
+            excel_data.getvalue(),
+            folder_id,
+            f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        st.success(f"✅ Archivo guardado en Drive: {link}")
+    else:
+        st.info("📭 No hay datos para subir. Generá al menos un análisis.")
+
     col_export1, col_export2, col_export3 = st.columns(3)
     
     with col_export1:
@@ -1244,6 +1265,20 @@ if st.session_state.analysis_history:
             mime="text/csv",
             use_container_width=True
         )
+        
+    if st.button("🚀 Subir Excel a Drive"):
+        excel_data = export_to_excel()
+        folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
+        link = upload_to_drive(
+            excel_data.getvalue(),
+            folder_id,
+            f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        st.success(f"✅ Archivo guardado en Drive: {link}")
+else:
+    st.info("📭 No hay datos para subir. Generá al menos un análisis.")
+
     
     with col_export3:
         st.markdown("### 📋 Vista Previa de Datos")
