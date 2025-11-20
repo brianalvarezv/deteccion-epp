@@ -23,7 +23,7 @@ if "analysis_history" not in st.session_state:
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 # 👉 Cargar credenciales desde secretos de Streamlit
-service_account_info = st.secrets["gcp_service_account"]
+service_account_info = st.secrets["google_oauth"]
 
 # Crear credenciales a partir del diccionario
 creds = service_account.Credentials.from_service_account_info(
