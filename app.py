@@ -478,7 +478,7 @@ def upload_to_drive(file_bytes, folder_id, filename, mimetype):
     }
     
     # Crear objeto de subida en memoria
-    media = MediaIoBaseUpload(file_bytes, mimetype=mimetype)
+    media = MediaIoBaseUpload(BytesIO(file_bytes), mimetype=mimetype, resumable=True)
     
     # Subir el archivo a Drive
     file = drive_service.files().create(
