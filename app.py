@@ -11,6 +11,9 @@ import os
 import pandas as pd
 import csv
 from io import BytesIO
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+from google.oauth2 import service_account
 
 
 # Inicializar historial de análisis si no existe
@@ -18,7 +21,13 @@ if "analysis_history" not in st.session_state:
     st.session_state.analysis_history = []
 
 
+SCOPES = ['https://www.googleapis.com/auth/drive.file']
+SERVICE_ACCOUNT_FILE = 'credenciales.json'  # tu archivo de credenciales
 
+creds = service_account.Credentials.from_service_account_file(
+    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+)
+drive_service = build('drive', 'v3', credentials=creds)
 # =============================================
 # CONFIGURACIÓN DE LA PÁGINA
 # =============================================
@@ -469,7 +478,7 @@ def upload_to_drive(file_bytes, folder_id, filename, mimetype):
     }
     
     # Crear objeto de subida en memoria
-    media = MediaInMemoryUpload(file_bytes, mimetype=mimetype)
+    media = MediaIoBaseUpload(file_bytes, mimetype=mimetype)
     
     # Subir el archivo a Drive
     file = drive_service.files().create(
