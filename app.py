@@ -487,38 +487,6 @@ class SafetyExpertSystem:
 # SISTEMA DE EXPORTACIÓN DE DATOS
 # =============================================
 
-def upload_to_drive(file_bytes, folder_id, filename, mimetype):
-    """
-    Sube un archivo a Google Drive y devuelve el link de visualización.
-    
-    Parámetros:
-        file_bytes (bytes): contenido del archivo en memoria
-        folder_id (str): ID de la carpeta de destino en Google Drive
-        filename (str): nombre con el que se guardará el archivo
-        mimetype (str): tipo MIME del archivo (ej: "text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-    
-    Retorna:
-        str: enlace webViewLink del archivo subido
-    """
-    
-    # Metadatos del archivo (nombre y carpeta destino)
-    file_metadata = {
-        'name': filename,
-        'parents': [folder_id]
-    }
-    
-    # Crear objeto de subida en memoria
-    media = MediaIoBaseUpload(BytesIO(file_bytes), mimetype=mimetype, resumable=True)
-    
-    # Subir el archivo a Drive
-    file = drive_service.files().create(
-        body=file_metadata,
-        media_body=media,
-        fields='id, webViewLink'
-    ).execute()
-    
-    # Devolver el link de acceso
-    return file['webViewLink']
 
 def generate_export_data():
     """Genera DataFrames para exportación"""
