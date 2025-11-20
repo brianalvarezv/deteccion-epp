@@ -440,6 +440,8 @@ class SafetyExpertSystem:
 # =============================================
 # SISTEMA DE EXPORTACIÓN DE DATOS
 # =============================================
+
+def upload_to_drive(file_bytes, folder_id, filename, mimetype): """Sube un archivo a Google Drive y devuelve el link""" file_metadata = { 'name': filename, 'parents': [folder_id] } media = MediaInMemoryUpload(file_bytes, mimetype=mimetype) file = drive_service.files().create( body=file_metadata, media_body=media, fields='id, webViewLink' ).execute() return file['webViewLink']
 def generate_export_data():
     """Genera DataFrames para exportación"""
     
@@ -530,6 +532,27 @@ def export_to_csv():
     
     output.seek(0)
     return output
+
+
+# En tu app.py, después de definir export_to_csv y upload_to_drive:
+
+# Generar el archivo
+excel_data = export_to_csv()
+
+# Definir la carpeta de Drive
+folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
+
+# Subir el archivo a Drive
+link = upload_to_drive(
+    excel_data.getvalue(),   # bytes del Excel
+    folder_id,
+    f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+)
+
+# Mostrar el link en la app
+st.success(f"✅ Archivo guardado en Drive: {link}")
+
 
 def export_to_excel():
     """Exporta todos los datos a Excel"""
