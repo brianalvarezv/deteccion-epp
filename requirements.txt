@@ -5,3 +5,5 @@ numpy
 Pillow
 torch
 torchvision
+pandas
+xlsxwriter
