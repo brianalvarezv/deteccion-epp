@@ -22,12 +22,16 @@ if "analysis_history" not in st.session_state:
 
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
-SERVICE_ACCOUNT_FILE = 'credenciales.json'  # tu archivo de credenciales
+# 👉 Cargar credenciales desde secretos de Streamlit
+service_account_info = st.secrets["gcp_service_account"]
 
-creds = service_account.Credentials.from_service_account_file(
-    SERVICE_ACCOUNT_FILE, scopes=SCOPES
+# Crear credenciales a partir del diccionario
+creds = service_account.Credentials.from_service_account_info(
+    service_account_info, scopes=SCOPES
 )
-drive_service = build('drive', 'v3', credentials=creds)
+
+# Inicializar cliente de Drive
+drive_service = build("drive", "v3", credentials=creds)
 # =============================================
 # CONFIGURACIÓN DE LA PÁGINA
 # =============================================
