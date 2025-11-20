@@ -11,9 +11,9 @@ import os
 import pandas as pd
 import csv
 from io import BytesIO
+from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
-from google.oauth2 import service_account
 
 
 # Inicializar historial de análisis si no existe
