@@ -11,6 +11,9 @@ import os
 import pandas as pd
 import csv
 from io import BytesIO
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaInMemoryUpload
 
 # =============================================
 # CONFIGURACIÓN DE LA PÁGINA
@@ -1170,6 +1173,7 @@ if st.session_state.analysis_history:
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             use_container_width=True
         )
+     
     
     with col_export2:
         st.markdown("### 📄 Exportar a CSV")
@@ -1189,6 +1193,11 @@ if st.session_state.analysis_history:
             mime="text/csv",
             use_container_width=True
         )
+           # Guardar también en Google Drive
+        folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"  # ID de la carpeta compartida en Drive
+        link = upload_csv_to_drive(csv_data, folder_id)
+        st.success(f"✅ CSV guardado en Drive: {link}")
+
     
     with col_export3:
         st.markdown("### 📋 Vista Previa de Datos")
