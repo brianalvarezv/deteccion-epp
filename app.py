@@ -24,14 +24,40 @@ if "analysis_history" not in st.session_state:
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 # 👉 Cargar credenciales desde secretos de Streamlit
 service_account_info = st.secrets["google_oauth"]
+def get_drive_service():
+    # Crear flujo OAuth con client_id y client_secret
+    flow = Flow.from_client_config(
+        {
+            "web": {
+                "client_id": st.secrets["google_oauth"]["client_id"],
+                "client_secret": st.secrets["google_oauth"]["client_secret"],
+                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                "token_uri": "https://oauth2.googleapis.com/token"
+            }
+        },
+        scopes=SCOPES
+    )
+    flow.redirect_uri = st.experimental_get_query_params().get("redirect_uri", ["http://localhost:8501"])[0]
 
-# Crear credenciales a partir del diccionario
-creds = service_account.Credentials.from_service_account_info(
-    service_account_info, scopes=SCOPES
-)
+    # Si no hay token, mostrar link de autorización
+    if "credentials" not in st.session_state:
+        auth_url, _ = flow.authorization_url(prompt="consent")
+        st.write(f"[Autorizar con Google]({auth_url})")
+        return None
+    else:
+        creds = flow.credentials
+        return build("drive", "v3", credentials=creds)
 
-# Inicializar cliente de Drive
-drive_service = build("drive", "v3", credentials=creds)
+def upload_to_drive(file_bytes, folder_id, filename, mimetype):
+    drive_service = get_drive_service()
+    if not drive_service:
+        return None
+    file_metadata = {"name": filename, "parents": [folder_id]}
+    media = MediaIoBaseUpload(BytesIO(file_bytes), mimetype=mimetype, resumable=True)
+    file = drive_service.files().create(
+        body=file_metadata, media_body=media, fields="id, webViewLink"
+    ).execute()
+    return file["webViewLink"]
 # =============================================
 # CONFIGURACIÓN DE LA PÁGINA
 # =============================================
