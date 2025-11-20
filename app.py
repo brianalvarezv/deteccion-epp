@@ -1265,19 +1265,19 @@ if st.session_state.analysis_history:
             mime="text/csv",
             use_container_width=True
         )
-        
-    if st.button("🚀 Subir Excel a Drive"):
-        excel_data = export_to_excel()
-        folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
-        link = upload_to_drive(
-            excel_data.getvalue(),
-            folder_id,
-            f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-        st.success(f"✅ Archivo guardado en Drive: {link}")
-else:
-    st.info("📭 No hay datos para subir. Generá al menos un análisis.")
+            
+        if st.button("🚀 Subir Excel a Drive"):
+            excel_data = export_to_excel()
+            folder_id = "1bxnvet83azZyo6aWbAmhaiQLk5k2bWd6"
+            link = upload_to_drive(
+                excel_data.getvalue(),
+                folder_id,
+                f"safebuild_analisis_{datetime.now().strftime('%Y%m%d_%H%M')}.xlsx",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+            st.success(f"✅ Archivo guardado en Drive: {link}")
+        else:
+            st.info("📭 No hay datos para subir. Generá al menos un análisis.")
 
     
     with col_export3:
